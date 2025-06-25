@@ -83,5 +83,3 @@ Personality context is also saved per user
 
 Useful for training, analytics, or fine-tuning
 
-## Author
-Built by [Crow-404] — Inspired by Resident Evil and AI agent roleplay.
