@@ -7,11 +7,6 @@ logger = logging.getLogger('LLMHandler')
 
 class LLMHandler:
     def __init__(self):
-        """
-        Initialize the LLMHandler by setting up the Ollama client and testing the connection.
-        Logs the initialization status and handles errors if the Ollama module is not installed
-        or if the connection fails.
-        """
         try:
             # Initialize Ollama client properly
             import ollama
@@ -29,16 +24,13 @@ class LLMHandler:
             self.ollama = None
 
     def generate_response(self, user_input: str, lang: str = "en") -> str:
-        """
-        Generate a response from the language model based on the user's input and language.
-        Applies system personality, enforces a word limit, cleans up the output, and logs the result.
-        Returns an error message if the LLM is not initialized or if generation fails.
-        """
+        """Generate response with personality and word limit"""
         if self.ollama is None:
             return personality.get_error_response(lang)
             
         try:
             # Get web context
+            
             
             # Format prompt with personality
             system_prompt = personality.get_personality()["system_prompt"].get(
@@ -81,18 +73,12 @@ class LLMHandler:
             return personality.get_error_response(lang)
 
     def remove_parenthetical_actions(self, text):
-        """
-        Remove any parenthetical actions (e.g., "(Checking ammo)") that appear at the beginning
-        of the response text.
-        """
+        """Remove text in parentheses that appear at the beginning of the response"""
         # Pattern to match parentheses at start of string
         return re.sub(r'^\s*\([^)]*\)\s*', '', text)
 
     def enforce_word_limit(self, text):
-        """
-        Truncate the response text to the maximum number of words specified in the configuration.
-        Adds ellipsis if the text is truncated.
-        """
+        """Truncate response to MAX_RESPONSE_WORDS"""
         words = text.split()
         if len(words) > Config.MAX_RESPONSE_WORDS:
             return ' '.join(words[:Config.MAX_RESPONSE_WORDS]) + '...'
